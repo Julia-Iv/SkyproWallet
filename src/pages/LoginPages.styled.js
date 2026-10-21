@@ -1,14 +1,70 @@
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
+export const GlobalStyle = createGlobalStyle`
+  html, bodyб #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+  }
+  #root {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f5f7;
+  }
+`;
+
+export const HeaderWrapper = styled.header`
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #eef0f2;
+  display: flex;
+  align-items: center;
+  padding: 0 120px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+export const HeaderLogo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const HeaderLogoIconSvg = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #000000;
+  border-radius: 6px;
+  color: #ffffff;
+`;
+
+export const HeaderLogoText = styled.span`
+  font-weight: 700;
+  font-size: 15px;
+  color: #1a1a1a;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+`;
 
 // Обертка на весь экран для центрирования карточки
 export const PageWrapper = styled.div`
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100vh;
   background-color: #f4f5f7;
-  display: flex;
+  padding-top: 60px;
   font-family:
     system-ui,
     -apple-system,
@@ -21,7 +77,7 @@ export const Card = styled.div`
   background-color: #ffffff;
   padding: 40px 32px;
   width: 100%;
-  max-width: 400px;
+  max-width: 360px;
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   display: flex;

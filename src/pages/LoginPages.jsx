@@ -2,82 +2,93 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./LoginPages.styled";
 
-const LoginPages= () => {
+const LoginPages = () => {
   const navigate = useNavigate();
 
-  // Состояния для полей формы
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // Состояние ошибки (для демонстрации валидации, как на макете)
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Простейшая проверка на заполненность
     if (!email || !password) {
       setError("Заполните все поля");
       return;
     }
     setError("");
     console.log("Данные формы:", { email, password });
-
-    // Имитация успешного входа и переход в личный кабинет
     navigate("/expenses");
   };
 
   return (
-    <S.PageWrapper>
-      <S.Card>
-        {/* Логотип над формой */}
-        <S.Logo>
-          <S.LogoIcon>🪙</S.LogoIcon>
-          <S.LogoText>Skypro.Wallet</S.LogoText>
-        </S.Logo>
+    <>
+      <S.GlobalStyle />
 
-        <S.Title>Вход</S.Title>
+      <S.HeaderWrapper>
+        <S.HeaderLogo>
+          {/* Фирменная иконка Skypro.Wallet из трех столбцов */}
+          <S.HeaderLogoIconSvg>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </S.HeaderLogoIconSvg>
+          <S.HeaderLogoText>Skypro.Wallet</S.HeaderLogoText>
+        </S.HeaderLogo>
+      </S.HeaderWrapper>
 
-        <S.Form onSubmit={handleSubmit}>
-          {/* Поле Email */}
-          <S.InputGroup>
-            <S.Label>Email</S.Label>
-            <S.Input
-              type="email"
-              placeholder="example@mail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              $hasError={!!error} // передаем true/false для подсветки ошибки
-            />
-          </S.InputGroup>
-          {/* Поле Пароль */}
-          <S.InputGroup>
-            <S.Label>Пароль</S.Label>
-            <S.Input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              $hasError={!!error}
-            />
-          </S.InputGroup>
+      {/* Центрирующий контейнер */}
+      <S.PageWrapper>
+        <S.Card>
+          <S.Title>Вход</S.Title>
 
-          {/* Блок вывода ошибки (если она есть) */}
-          {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+          <S.Form onSubmit={handleSubmit}>
+            {/* Поле Email */}
+            <S.InputGroup>
+              <S.Input
+                type="email"
+                placeholder="Логин"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                $hasError={!!error}
+              />
+            </S.InputGroup>
 
-          {/* Кнопка отправки формы */}
-          <S.SubmitBtn type="submit">Войти</S.SubmitBtn>
-        </S.Form>
+            {/* Поле Пароль */}
+            <S.InputGroup>
+              <S.Input
+                type="password"
+                placeholder="Пароль"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                $hasError={!!error}
+              />
+            </S.InputGroup>
 
-        {/* Ссылка на регистрацию */}
-        <S.Footer>
-          <span>Впервые у нас? </span>
-          <S.LinkBtn onClick={() => navigate("/register")}>
-            Регистрация
-          </S.LinkBtn>
-        </S.Footer>
-      </S.Card>
-    </S.PageWrapper>
+            {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+
+            <S.SubmitBtn type="submit">Войти</S.SubmitBtn>
+          </S.Form>
+
+          <S.Footer>
+            <span>Нужен новый аккаунт?</span>
+            <S.LinkBtn onClick={() => navigate("/register")}>
+              Регистрация здесь
+            </S.LinkBtn>
+          </S.Footer>
+        </S.Card>
+      </S.PageWrapper>
+    </>
   );
 };
 
