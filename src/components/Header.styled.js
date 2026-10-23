@@ -25,15 +25,51 @@ export const Logo = styled.div`
   cursor: pointer;
 `;
 
-export const LogoIcon = styled.span`
-  font-size: 20px;
+export const LogoIconSvg = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background-color: #6366f1;
+  border-radius: 6px;
+  color: #ffffff;
 `;
 
 export const LogoText = styled.span`
   font-weight: 700;
   font-size: 16px;
   color: #1a1a1a;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+`;
+// --- ЦЕНТРАЛЬНАЯ ЧАСТЬ: НАВИГАЦИЯ ---
+export const NavLink = styled.nav`
+  display: flex;
+  gap: 24px;
+  align-items: center;
+`;
+
+export const MenuLink = styled.a`
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  text-decoration: none;
   font-family: system-ui, -apple-system, sans-serif;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #6366f1;
+  }
+
+  /* Класс active автоматически вешается компонентом NavLink из react-router-dom */
+  &.active {
+    color: #6366f1;
+    border-bottom-color: #6366f1;
+  }
 `;
 
 // Правая часть: Блок пользователя / Действия
@@ -47,7 +83,10 @@ export const UserName = styled.span`
   font-size: 14px;
   font-weight: 500;
   color: #6e6e6e;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 `;
 
 export const LogoutBtn = styled.button`
@@ -60,11 +99,42 @@ export const LogoutBtn = styled.button`
   color: #6e6e6e;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 
   &:hover {
     background-color: #fafafa;
     border-color: #6c5ce7;
     color: #6c5ce7;
+  }
+`;
+// Центрированный контейнер для ссылок навигации
+export const Nav = styled.nav`
+  display: flex;
+  gap: 24px;
+  align-items: center;
+`;
+
+// Стили для ссылок меню
+export const MenuLink = styled.a`
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  text-decoration: none;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #6366f1;
+  }
+
+  /* Автоматический класс от NavLink для активного маршрута */
+  &.active {
+    color: #6366f1;
+    border-bottom-color: #6366f1;
   }
 `;

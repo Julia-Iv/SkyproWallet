@@ -23,7 +23,15 @@ const Header = () => {
         </S.LogoIconSvg>
         <S.LogoText>Skypro.Wallet</S.LogoText>
       </S.Logo>
-
+{/* Центральная часть: Навигация */}
+      <S.Nav>
+        <S.MenuLink as={NavLink} to="/expenses">
+          Мои расходы
+        </S.MenuLink>
+        <S.MenuLink as={NavLink} to="/analysis">
+          Анализ расходов
+        </S.MenuLink>
+      </S.Nav>
       <S.UserBlock>
         <S.UserName>user@mail.com</S.UserName>
         <S.LogoutBtn onClick={handleLogout}>Выйти</S.LogoutBtn>
