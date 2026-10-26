@@ -45,7 +45,7 @@ export const LogoText = styled.span`
     sans-serif;
 `;
 // --- ЦЕНТРАЛЬНАЯ ЧАСТЬ: НАВИГАЦИЯ ---
-export const NavLink = styled.nav`
+export const Nav = styled.nav`
   display: flex;
   gap: 24px;
   align-items: center;
@@ -110,31 +110,5 @@ export const LogoutBtn = styled.button`
     color: #6c5ce7;
   }
 `;
-// Центрированный контейнер для ссылок навигации
-export const Nav = styled.nav`
-  display: flex;
-  gap: 24px;
-  align-items: center;
-`;
 
-// Стили для ссылок меню
-export const MenuLink = styled.a`
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
-  text-decoration: none;
-  font-family: system-ui, -apple-system, sans-serif;
-  padding: 4px 0;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s ease;
 
-  &:hover {
-    color: #6366f1;
-  }
-
-  /* Автоматический класс от NavLink для активного маршрута */
-  &.active {
-    color: #6366f1;
-    border-bottom-color: #6366f1;
-  }
-`;

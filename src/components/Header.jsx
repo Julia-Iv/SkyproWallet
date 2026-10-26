@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import * as S from "./Header.styled";
 
 const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Здесь будет логика очистки токена/авторизации
+    // логика очистки токена/авторизации
     console.log("Выход из системы");
     navigate("/login");
   };
@@ -33,7 +33,6 @@ const Header = () => {
         </S.MenuLink>
       </S.Nav>
       <S.UserBlock>
-        <S.UserName>user@mail.com</S.UserName>
         <S.LogoutBtn onClick={handleLogout}>Выйти</S.LogoutBtn>
       </S.UserBlock>
     </S.HeaderContainer>

@@ -7,15 +7,27 @@ export const PageWrapper = styled.div`
   color: #1f2937;
 `;
 
-export const Header = styled.header`
+ export const Header = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eef0f2;
+  z-index: 100;
+  box-sizing: border-box;
+  
+  /* Внутренний контейнер для центрирования элементов хедера */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 32px;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-`;
+  padding: 0 calc((100% - 1200px) / 2 + 24px); 
 
+  @media (max-width: 1248px) {
+    padding: 0 24px;
+  }
+`;
 export const Logo = styled.div`
   display: flex;
   align-items: center;
@@ -67,22 +79,25 @@ export const LogoutButton = styled.button`
 `;
 
 export const Main = styled.main`
-  max-width: 1280px;
-  padding-top: 60px;
-  margin-top: 60px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 90px 24px 24px;
+  box-sizing: border-box;
 `;
 
 export const Title = styled.h1`
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   margin-bottom: 24px;
   color: #111827;
+  text-align: left;
 `;
 
 export const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 32px;
+  gap: 24px;
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
