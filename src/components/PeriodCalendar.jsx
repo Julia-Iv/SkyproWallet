@@ -1,4 +1,4 @@
-import * as S from "./AnalysisPage.styled";
+import * as S from "../pages/AnalysisPage.styled";
 
 const PeriodCalendar = () => {
   const daysOfWeek = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
@@ -24,7 +24,7 @@ const PeriodCalendar = () => {
           {/* Пустые ячейки для выравнивания по дням недели, если месяц начинается не с понедельника */}
           <div /> <div /> 
           {julyDays.map((day) => (
-            <S.DayButton key={day} $active={day === 10}>
+            <S.DayButton key={`july-${day}`} $active={day === 10}>
               {day}
             </S.DayButton>
           ))}
@@ -34,7 +34,9 @@ const PeriodCalendar = () => {
         <S.DaysGrid>
           {/* Пример для следующего месяца */}
           {Array.from({ length: 11 }, (_, i) => i + 1).map((day) => (
-            <S.DayButton key={day}>{day}</S.DayButton>
+            <S.DayButton key={`august-${day}`} $active={false}>
+              {day}
+            </S.DayButton>
           ))}
         </S.DaysGrid>
       </S.CalendarScroll>

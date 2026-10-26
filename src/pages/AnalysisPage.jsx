@@ -3,7 +3,7 @@ import PeriodCalendar from "../components/PeriodCalendar";
 import AnalysisChart from "./AnalysisChart";
 import * as S from "./AnalysisPage.styled";
 
-const AnalysisPages = () => {
+const AnalysisPage = () => {
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f4f5f7" }}>
       {/* Общая шапка приложения */}
@@ -25,4 +25,4 @@ const AnalysisPages = () => {
   );
 };
 
-export default AnalysisPages;
+export default AnalysisPage;
