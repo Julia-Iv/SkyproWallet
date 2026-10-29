@@ -30,9 +30,10 @@ export const LogoIconSvg = styled.div`
   align-items: center;
   justify-content: center;
   padding: 6px;
-  background-color: #6366f1;
+  background-color: #000000;
   border-radius: 6px;
   color: #ffffff;
+  margin-left: 150px;
 `;
 
 export const LogoText = styled.span`
@@ -62,13 +63,13 @@ export const MenuLink = styled.a`
   transition: all 0.2s ease;
 
   &:hover {
-    color: #6366f1;
+    color: #7334EA;
   }
 
   /* Класс active автоматически вешается компонентом NavLink из react-router-dom */
   &.active {
-    color: #6366f1;
-    border-bottom-color: #6366f1;
+    color: #7334EA;
+    border-bottom-color: #7334EA;
   }
 `;
 
@@ -96,7 +97,7 @@ export const LogoutBtn = styled.button`
   padding: 6px 12px;
   font-size: 13px;
   font-weight: 500;
-  color: #6e6e6e;
+ // color: #6e6e6e;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family:
@@ -106,8 +107,8 @@ export const LogoutBtn = styled.button`
 
   &:hover {
     background-color: #fafafa;
-    border-color: #6c5ce7;
-    color: #6c5ce7;
+    border-color: #7334EA;
+    color: #7334EA;
   }
 `;
 

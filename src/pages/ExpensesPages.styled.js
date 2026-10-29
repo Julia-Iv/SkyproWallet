@@ -87,7 +87,7 @@ export const Main = styled.main`
 `;
 
 export const Title = styled.h1`
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   margin-bottom: 24px;
   color: #111827;
@@ -113,7 +113,7 @@ export const Card = styled.section`
 `;
 
 export const CardTitle = styled.h2`
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 16px;
   color: #111827;
@@ -126,7 +126,7 @@ export const TableContainer = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 12px;
   text-align: left;
 `;
 
@@ -179,7 +179,7 @@ export const Input = styled.input`
   padding: 10px 12px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.2s;
@@ -221,7 +221,7 @@ export const SubmitButton = styled.button`
   padding: 12px;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
   margin-top: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);

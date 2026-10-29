@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as S from "./ExpensesPages.styled";
 import ExpensesTable from "./ExpensesTable";
 import AddExpenseForm from "./AddExpenseForm";
 import Header from "../components/Header";
-
+import api from "../api";
+/*
 const initialExpenses = [
   {
     id: 1,
@@ -34,28 +35,86 @@ const initialExpenses = [
     amount: "950 ₽",
   },
 ];
+*/
+const ExpensesPages = () => {
+  const [expenses, setExpenses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-function ExpensesPages() {
-  const [expenses, setExpenses] = useState(initialExpenses);
+  //  Функция загрузки расходов с бэкенда
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      setIsLoading(true);
+      try {
+        const response = await api.get("/transactions");
+        const transactionsData = response.data.transactions || response.data;
+        setExpenses(transactionsData);
+      } catch (error) {
+        if (error.response) {
+          // Сервер ответил статусом 5xx или 4xx
+          console.log("Данные ответа сервера:", error.response.data);
+          console.log("Статус ответа:", error.response.status);
+        } else if (error.request) {
+          // Запрос был отправлен, но ответ не получен
+          console.log("Сервер не ответил:", error.request);
+        } else {
+          console.log("Ошибка Axios:", error.message);
+        }
+        //console.error("Не удалось загрузить расходы:", error);
+        // alert("Ошибка при получении данных с сервера");
+        } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchExpenses();
+  }, []);
 
   // Коллбэк для добавления нового расхода из формы
-  const handleAddExpense = (expenseData) => {
+  const handleAddExpense = async (expenseData) => {
+    // Очищаем сумму от пробелов и валюты, преобразуя в чистое число для сервера
+    const cleanAmount =
+      typeof expenseData.amount === "string"
+        ? Number(expenseData.amount.replace(/\s|₽/g, ""))
+        : Number(expenseData.amount);
+
     const newExpense = {
-      id: Date.now(),
       name: expenseData.name,
       category: expenseData.category,
       date: expenseData.date,
-      amount: expenseData.amount.includes("₽")
-        ? expenseData.amount
-        : `${Number(expenseData.amount).toLocaleString("ru-RU")} ₽`,
+      amount: cleanAmount,
     };
+    try {
+      const response = await api.post("/transactions", newExpense);
 
-    setExpenses([newExpense, ...expenses]);
+      // Если сервер возвращает созданный объект внутри поля transaction, берем его
+      const addedExpense = response.data.transaction || response.data;
+
+      setExpenses([addedExpense, ...expenses]);
+    } catch (error) {
+      console.error("Полная ошибка Axios:", error);
+  
+  if (error.response) {
+    // Сервер ответил кодом ошибки (400, 401, 403 и т.д.)
+    console.log("Данные от сервера:", error.response.data);
+    alert(`Ошибка сервера: ${error.response.data.message || error.response.data.error || error.response.status}`);
+  } else {
+    // Ошибка сети или Axios
+    alert(`Ошибка соединения: ${error.message}`);
+     // console.error("Не удалось добавить расход:", error);
+     // alert("Ошибка при сохранении расхода");
+    }
+  }
   };
 
-  // Коллбэк для удаления расхода из таблицы
-  const handleDeleteExpense = (id) => {
-    setExpenses(expenses.filter((item) => item.id !== id));
+  //  удаления расхода из таблицы
+  const handleDeleteExpense = async (id) => {
+    try {
+      await api.delete(`/transactions/${id}`);
+      setExpenses(expenses.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Не удалось удалить расход:", error);
+      alert("Не удалось удалить элемент на сервере");
+    }
   };
 
   return (
@@ -68,17 +127,20 @@ function ExpensesPages() {
 
         <S.GridContainer>
           {/* Компонент таблицы */}
-          <ExpensesTable
-            expenses={expenses}
-            onDeleteExpense={handleDeleteExpense}
-          />
-
+          {isLoading ? (
+            <p>Загрузка расходов...</p>
+          ) : (
+            <ExpensesTable
+              expenses={expenses}
+              onDeleteExpense={handleDeleteExpense}
+            />
+          )}
           {/* Компонент формы */}
           <AddExpenseForm onAddExpense={handleAddExpense} />
         </S.GridContainer>
       </S.Main>
     </S.PageWrapper>
   );
-}
+};
 
 export default ExpensesPages;

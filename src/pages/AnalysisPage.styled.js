@@ -5,7 +5,11 @@ export const Main = styled.main`
   max-width: 1280px;
   margin: 0 auto;
   padding: 80px 24px 40px 24px;
-  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; 
+  font-family:
+    "Montserrat",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   box-sizing: border-box;
 `;
 
@@ -36,8 +40,8 @@ export const Card = styled.div`
   height: 100%;
   background-color: #ffffff;
   border-radius: 20px;
-  padding: 32px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+  padding: 24px 0px 24px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   height: 100%;
 `;
@@ -58,7 +62,10 @@ export const ChartSubTitle = styled.p`
 // Сетка для столбцов диаграммы (теперь гибкая и высокая)
 export const ChartBarsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6 одинаковых колонок на всю ширину карточки */
+  grid-template-columns: repeat(
+    6,
+    1fr
+  ); /* 6 одинаковых колонок на всю ширину карточки */
   gap: 24px; /* Увеличили расстояние между графиками */
   align-items: end;
   flex-grow: 1; /* Заставляет контейнер графиков занять всю оставшуюся высоту карточки */
@@ -111,12 +118,11 @@ export const BarLabel = styled.span`
 export const DaysOfWeek = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  justify-items: center;
+  text-align: center;
   margin-top: 32px;
   margin-bottom: 12px;
   border-bottom: 1px solid #f3f4f6;
-  padding-bottom: 8px;
-
+  padding-right: 24px;
   div {
     font-size: 12px;
     font-weight: 400;
@@ -125,9 +131,10 @@ export const DaysOfWeek = styled.div`
   }
 `;
 export const CalendarScroll = styled.div`
-  max-height: 320px;
+  max-height: 280px;
   overflow-y: auto;
-  padding-right: 4px;
+  margin-top: 16px;
+  padding-right: 24px;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -136,16 +143,25 @@ export const CalendarScroll = styled.div`
     background: #e5e7eb;
     border-radius: 4px;
   }
+  /* Смещаем сам скроллбар чуть ближе к краю карточки, если необходимо */
+  &::-webkit-scrollbar-track {
+    margin-right: 2px;
+  }
 `;
+export const MonthWrapper = styled.div`
+  margin-bottom: 24px; /* Отступ между месяцами (например, между концом Июля и заголовком Августа) */
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
 export const MonthTitle = styled.h3`
   font-size: 16px;
   font-weight: 600;
   color: #000000;
-  margin: 16px 0 12px 0;
-  &:first-of-type {
-    margin-top: 0;
-  }
+  margin-top: 0;
+  margin-bottom: 16px;
+  margin-left: 8px;
 `;
 
 export const DaysGrid = styled.div`
@@ -167,25 +183,25 @@ export const DayButton = styled.button`
   font-weight: 500;
   cursor: pointer;
 
-   /* СТАТИЧНОЕ СОСТОЯНИЕ: Все числа изначально в серых кружочках */
+  /* СТАТИЧНОЕ СОСТОЯНИЕ: Все числа изначально в серых кружочках */
   background: ${(props) => (props.$active ? "#7F56D9" : "#F3F4F6")};
   /* Для активного дня текст белый, для остальных — темно-серый */
   color: ${(props) => (props.$active ? "#ffffff" : "#4b5563")};
-  
-  transition: background-color 0.2s ease, color 0.2s ease;
 
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 
   &:hover {
     background: ${(props) => (props.$active ? "#7F56D9" : "#f3f4f6")};
   }
-   /* При наведении любой кружок плавно становится фиолетовым */
+  /* При наведении любой кружок плавно становится фиолетовым */
   &:hover {
-    background: #7F56D9;
+    background: #7f56d9;
     color: #ffffff;
   }
 `;
 /* Стили для Графика */
-
 
 export const ChartAmount = styled.div`
   font-size: 24px;
@@ -193,8 +209,6 @@ export const ChartAmount = styled.div`
   color: #111827;
   margin-bottom: 32px;
 `;
-
-
 
 // Подпись под столбцом (Еда, Транспорт...)
 
@@ -227,4 +241,3 @@ export const BarValue = styled.span`
   font-weight: 600;
   color: #111827;
 `;
-
