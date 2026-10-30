@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./LoginPages.styled";
+import api from "../api";
 
 const LoginPages = () => {
   const navigate = useNavigate();
@@ -8,17 +9,47 @@ const LoginPages = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Заполните все поля");
       return;
     }
     setError("");
-    console.log("Данные формы:", { email, password });
-    navigate("/expenses");
+    setIsLoading(true);
+
+    try {
+      // Отправляем реальный запрос на бэкенд Skypro для входа
+      const response = await api.post("/user/login", {
+        login: email, // wedev-api принимает поле под ключом 'login'
+        password: password,
+      });
+
+      // Извлекаем токен из структуры ответа wedev-api
+      const token = response.data.user?.token || response.data.token;
+
+      if (token) {
+        // Сохраняем токен в localStorage под ключом 'token'
+        localStorage.setItem("token", token);
+        
+        // Перенаправляем на страницу расходов только ПОСЛЕ успешного получения токена
+        navigate("/expenses");
+      } else {
+        setError("Не удалось получить токен авторизации от сервера");
+      }
+
+    } catch (err) {
+      console.error("Ошибка при авторизации:", err);
+      // Выводим текст ошибки, который прислал сервер (например, "Неверный логин или пароль")
+      const serverMessage = err.response?.data?.error || err.response?.data?.message;
+      setError(serverMessage || "Произошла ошибка при входе. Попробуйте позже.");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   return (
     <>
@@ -72,6 +103,7 @@ const LoginPages = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 $hasError={!!error}
+                disabled={isLoading}
               />
             </S.InputGroup>
 

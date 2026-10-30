@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./RegisterPages.styled"; // Переиспользуем готовые стили карточки и шапки
+import api from "../api";
 
 const RegisterPages = () => {
   const navigate = useNavigate();
@@ -15,7 +16,11 @@ const RegisterPages = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handleSubmit = (e) => {
+  // Общая серверная ошибка и состояние загрузки
+  const [serverError, setServerError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Сброс старых ошибок
@@ -41,10 +46,37 @@ const RegisterPages = () => {
 
     if (!isValid) return;
 
-    console.log("Данные регистрации:", { name, email, password });
-    
-    // После успешной регистрации имитируем вход и перенаправляем на расходы
-    navigate("/expenses");
+    setIsLoading(true);
+
+    try {
+      // Отправляем реальный запрос на регистрацию
+      const response = await api.post("/user", {
+        name: name,
+        login: email, // Бэкенд wedev-api принимает email в поле 'login'
+        password: password,
+      });
+
+      // Извлекаем токен из структуры ответа wedev-api
+      const token = response.data.user?.token || response.data.token;
+
+      if (token) {
+        // Сохраняем токен в localStorage под ключом 'token'
+        localStorage.setItem("token", token);
+        
+        // Перенаправляем на страницу расходов после успешной регистрации и авторизации
+        navigate("/expenses");
+      } else {
+        setServerError("Не удалось получить токен авторизации от сервера");
+      }
+
+    } catch (err) {
+      console.error("Ошибка при регистрации:", err);
+      // Выводим текст ошибки, который прислал сервер (например, "Пользователь с таким логином уже существует")
+      const serverMessage = err.response?.data?.error || err.response?.data?.message;
+      setServerError(serverMessage || "Не удалось зарегистрироваться. Попробуйте позже.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,6 +123,7 @@ const RegisterPages = () => {
                   if (nameError) setNameError("");
                 }}
                 $hasError={!!nameError}
+                disabled={isLoading}
               />
               {nameError && <S.ErrorMessage>{nameError}</S.ErrorMessage>}
             </S.InputGroup>
@@ -106,6 +139,7 @@ const RegisterPages = () => {
                   if (emailError) setEmailError("");
                 }}
                 $hasError={!!emailError}
+                disabled={isLoading}
               />
               {emailError && <S.ErrorMessage>{emailError}</S.ErrorMessage>}
             </S.InputGroup>
@@ -121,18 +155,22 @@ const RegisterPages = () => {
                   if (passwordError) setPasswordError("");
                 }}
                 $hasError={!!passwordError}
+                disabled={isLoading}
               />
               {passwordError && <S.ErrorMessage>{passwordError}</S.ErrorMessage>}
             </S.InputGroup>
 
+            {/* Вывод ошибки от бэкенда, если логин занят */}
+            {serverError && <S.ErrorMessage>{serverError}</S.ErrorMessage>}
+
             {/* Кнопка регистрации */}
-            <S.SubmitBtn type="submit">Зарегистрироваться</S.SubmitBtn>
+            <S.SubmitBtn type="submit" disabled={isLoading}>Зарегистрироваться</S.SubmitBtn>
           </S.Form>
 
           {/* Ссылка возврата на страницу входа */}
           <S.Footer>
             <span>Уже есть аккаунт?</span>
-            <S.LinkBtn onClick={() => navigate("/login")}>
+            <S.LinkBtn onClick={() => navigate("/login")} disabled={isLoading}>
               Войти здесь
             </S.LinkBtn>
           </S.Footer>
