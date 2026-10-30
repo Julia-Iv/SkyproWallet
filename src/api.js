@@ -9,36 +9,25 @@ api.interceptors.request.use(
     // Подставляем токен из localStorage для защищенных эндпоинтов
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.set("Authorization", `Bearer ${token}`);
     }
-
-    // Разделение логики контента:
+    //  Если это логин или регистрация (/user), отправляем стандартный JSON
     if (config.url && config.url.includes("user")) {
-      // Для логина и регистрации передаем данные строго как обычный объект JSON
-      config.headers["Content-Type"] = "application/json";
-
-      // Если данные уже были случайно превращены в строку в компоненте,
-      // парсим обратно в объект, чтобы Axios сам отправил чистый JSON
-      if (typeof config.data === "string") {
-        try {
-          config.data = JSON.parse(config.data);
-        } catch (e) {
-          // оставляем как есть
-        }
-      }
-    } else {
-      // Для ВСЕХ остальных запросов (расходы /transactions) убираем JSON-заголовок
-      if (config.data && typeof config.data === "object") {
-        config.data = JSON.stringify(config.data);
-
-        if (config.headers.delete) {
-          config.headers.delete("Content-Type");
-        } else {
-          delete config.headers["Content-Type"];
-        }
-      }
+      config.headers.set("Content-Type", "application/json");
     }
+    // Если это РАСХОДЫ (/transactions), преобразуем объект в текстовую строку параметров URL
+    else if (config.data && typeof config.data === "object") {
+      const textParams = new URLSearchParams();
+      Object.entries(config.data).forEach(([key, value]) => {
+        textParams.append(key, value);
+      });
 
+      // Превращаем объект в сырую строку вида name=Пятерочка&amount=3500...
+      config.data = textParams.toString();
+
+      // Устанавливаем text/plain, чтобы сервер не ругался на формат json
+      config.headers.set("Content-Type", "text/plain");
+    }
     return config;
   },
   (error) => {

@@ -62,18 +62,21 @@ const RegisterPages = () => {
       if (token) {
         // Сохраняем токен в localStorage под ключом 'token'
         localStorage.setItem("token", token);
-        
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
         // Перенаправляем на страницу расходов после успешной регистрации и авторизации
         navigate("/expenses");
       } else {
         setServerError("Не удалось получить токен авторизации от сервера");
       }
-
     } catch (err) {
       console.error("Ошибка при регистрации:", err);
       // Выводим текст ошибки, который прислал сервер (например, "Пользователь с таким логином уже существует")
-      const serverMessage = err.response?.data?.error || err.response?.data?.message;
-      setServerError(serverMessage || "Не удалось зарегистрироваться. Попробуйте позже.");
+      const serverMessage =
+        err.response?.data?.error || err.response?.data?.message;
+      setServerError(
+        serverMessage || "Не удалось зарегистрироваться. Попробуйте позже.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -157,14 +160,18 @@ const RegisterPages = () => {
                 $hasError={!!passwordError}
                 disabled={isLoading}
               />
-              {passwordError && <S.ErrorMessage>{passwordError}</S.ErrorMessage>}
+              {passwordError && (
+                <S.ErrorMessage>{passwordError}</S.ErrorMessage>
+              )}
             </S.InputGroup>
 
             {/* Вывод ошибки от бэкенда, если логин занят */}
             {serverError && <S.ErrorMessage>{serverError}</S.ErrorMessage>}
 
             {/* Кнопка регистрации */}
-            <S.SubmitBtn type="submit" disabled={isLoading}>Зарегистрироваться</S.SubmitBtn>
+            <S.SubmitBtn type="submit" disabled={isLoading}>
+              Зарегистрироваться
+            </S.SubmitBtn>
           </S.Form>
 
           {/* Ссылка возврата на страницу входа */}

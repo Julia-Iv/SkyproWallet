@@ -45,7 +45,7 @@ const ExpensesPages = () => {
     const fetchExpenses = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get("/transactions");
+        const response = await api.get("transactions");
         const transactionsData = response.data.transactions || response.data;
         setExpenses(transactionsData);
       } catch (error) {
@@ -61,7 +61,7 @@ const ExpensesPages = () => {
         }
         //console.error("Не удалось загрузить расходы:", error);
         // alert("Ошибка при получении данных с сервера");
-        } finally {
+      } finally {
         setIsLoading(false);
       }
     };
@@ -84,32 +84,34 @@ const ExpensesPages = () => {
       amount: cleanAmount,
     };
     try {
-      const response = await api.post("/transactions", newExpense);
 
+      const response = await api.post("transactions", newExpense);
       // Если сервер возвращает созданный объект внутри поля transaction, берем его
       const addedExpense = response.data.transaction || response.data;
 
       setExpenses([addedExpense, ...expenses]);
     } catch (error) {
       console.error("Полная ошибка Axios:", error);
-  
-  if (error.response) {
-    // Сервер ответил кодом ошибки (400, 401, 403 и т.д.)
-    console.log("Данные от сервера:", error.response.data);
-    alert(`Ошибка сервера: ${error.response.data.message || error.response.data.error || error.response.status}`);
-  } else {
-    // Ошибка сети или Axios
-    alert(`Ошибка соединения: ${error.message}`);
-     // console.error("Не удалось добавить расход:", error);
-     // alert("Ошибка при сохранении расхода");
+
+      if (error.response) {
+        // Сервер ответил кодом ошибки (400, 401, 403 и т.д.)
+        console.log("Данные от сервера:", error.response.data);
+        alert(
+          `Ошибка сервера: ${error.response.data.message || error.response.data.error || error.response.status}`,
+        );
+      } else {
+        // Ошибка сети или Axios
+        alert(`Ошибка соединения: ${error.message}`);
+        // console.error("Не удалось добавить расход:", error);
+        // alert("Ошибка при сохранении расхода");
+      }
     }
-  }
   };
 
   //  удаления расхода из таблицы
   const handleDeleteExpense = async (id) => {
     try {
-      await api.delete(`/transactions/${id}`);
+      await api.delete(`transactions/${id}`);
       setExpenses(expenses.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Не удалось удалить расход:", error);

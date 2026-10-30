@@ -22,7 +22,7 @@ const LoginPages = () => {
 
     try {
       // Отправляем реальный запрос на бэкенд Skypro для входа
-      const response = await api.post("/user/login", {
+      const response = await api.post("user/login", {
         login: email, // wedev-api принимает поле под ключом 'login'
         password: password,
       });
@@ -33,23 +33,25 @@ const LoginPages = () => {
       if (token) {
         // Сохраняем токен в localStorage под ключом 'token'
         localStorage.setItem("token", token);
-        
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
         // Перенаправляем на страницу расходов только ПОСЛЕ успешного получения токена
         navigate("/expenses");
       } else {
         setError("Не удалось получить токен авторизации от сервера");
       }
-
     } catch (err) {
       console.error("Ошибка при авторизации:", err);
       // Выводим текст ошибки, который прислал сервер (например, "Неверный логин или пароль")
-      const serverMessage = err.response?.data?.error || err.response?.data?.message;
-      setError(serverMessage || "Произошла ошибка при входе. Попробуйте позже.");
+      const serverMessage =
+        err.response?.data?.error || err.response?.data?.message;
+      setError(
+        serverMessage || "Произошла ошибка при входе. Попробуйте позже.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
-
 
   return (
     <>
