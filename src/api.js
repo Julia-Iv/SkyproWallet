@@ -1,37 +1,53 @@
-import axios from "axios";
+const BASE_URL = "https://wedev-api.sky.pro/api";
 
+const api = async (endpoint, options = {}) => {
+  const url = `${BASE_URL}/${endpoint}`.replace(/([^:]\/)\/+/g, "$1");
+  options.headers = {
+    ...options.headers,
+  };
 
-const api = axios.create({
-  baseURL: "https://wedev-api.sky.pro/api",
-});
-api.interceptors.request.use(
-  (config) => {
-    // Подставляем токен из localStorage для защищенных эндпоинтов
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.set("Authorization", `Bearer ${token}`);
+  const token = localStorage.getItem("token");
+  if (token) {
+    options.headers["Authorization"] = `Bearer ${token}`;
+  } else {
+    console.warn("В localStorage отсутствует 'token' при вызове:", endpoint);
+  }
+
+  if (options.body && typeof options.body === "object") {
+    options.body = JSON.stringify(options.body);
+  }
+
+  // Для transactions не добавляем Content-Type, но объект превращаем в JSON-строку
+  else if (endpoint.includes("transactions")) {
+    if (options.body && typeof options.body === "object") {
+      options.body = JSON.stringify(options.body);
     }
-    //  Если это логин или регистрация (/user), отправляем стандартный JSON
-    if (config.url && config.url.includes("user")) {
-      config.headers.set("Content-Type", "application/json");
-    }
-    // Если это РАСХОДЫ (/transactions), преобразуем объект в текстовую строку параметров URL
-    else if (config.data && typeof config.data === "object") {
-      const textParams = new URLSearchParams();
-      Object.entries(config.data).forEach(([key, value]) => {
-        textParams.append(key, value);
-      });
+    delete options.headers["Content-Type"];
+  }
+  // Выводим в консоль для проверки перед отправкой
+  console.log(
+    `[Fetch Request] ${options.method || "GET"} ${url}`,
+    options.headers,
+  );
 
-      // Превращаем объект в сырую строку вида name=Пятерочка&amount=3500...
-      config.data = textParams.toString();
+  const response = await fetch(url, options);
 
-      // Устанавливаем text/plain, чтобы сервер не ругался на формат json
-      config.headers.set("Content-Type", "text/plain");
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Unauthorized: Неверный токен или сессия истекла");
     }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+
+    // Считываем JSON-ответ сервера с подробным описанием ошибки
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage =
+      errorData.error ||
+      errorData.message ||
+      `Ошибка сервера: ${response.status}`;
+
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
+};
+
 export default api;

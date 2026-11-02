@@ -27,6 +27,7 @@ const RegisterPages = () => {
     setNameError("");
     setEmailError("");
     setPasswordError("");
+    setServerError("");
 
     let isValid = true;
 
@@ -50,19 +51,21 @@ const RegisterPages = () => {
 
     try {
       // Отправляем реальный запрос на регистрацию
-      const response = await api.post("/user", {
-        name: name,
-        login: email, // Бэкенд wedev-api принимает email в поле 'login'
-        password: password,
+      const response = await api("user", {
+        method: "POST",
+        body: {
+          name: name,
+          login: email, // Бэкенд wedev-api принимает email в поле 'login'
+          password: password,
+        },
       });
 
       // Извлекаем токен из структуры ответа wedev-api
-      const token = response.data.user?.token || response.data.token;
+      const token = response.user?.token || response.token;
 
       if (token) {
         // Сохраняем токен в localStorage под ключом 'token'
         localStorage.setItem("token", token);
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         // Перенаправляем на страницу расходов после успешной регистрации и авторизации
         navigate("/expenses");
@@ -72,10 +75,9 @@ const RegisterPages = () => {
     } catch (err) {
       console.error("Ошибка при регистрации:", err);
       // Выводим текст ошибки, который прислал сервер (например, "Пользователь с таким логином уже существует")
-      const serverMessage =
-        err.response?.data?.error || err.response?.data?.message;
+      // Выводим текст ошибки, переданный из нашей обертки fetch
       setServerError(
-        serverMessage || "Не удалось зарегистрироваться. Попробуйте позже.",
+        err.message || "Не удалось зарегистрироваться. Попробуйте позже.",
       );
     } finally {
       setIsLoading(false);
@@ -170,7 +172,7 @@ const RegisterPages = () => {
 
             {/* Кнопка регистрации */}
             <S.SubmitBtn type="submit" disabled={isLoading}>
-              Зарегистрироваться
+              {isLoading ? "Регистрация..." : "Зарегистрироваться"}
             </S.SubmitBtn>
           </S.Form>
 

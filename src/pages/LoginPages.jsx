@@ -21,19 +21,21 @@ const LoginPages = () => {
     setIsLoading(true);
 
     try {
-      // Отправляем реальный запрос на бэкенд Skypro для входа
-      const response = await api.post("user/login", {
-        login: email, // wedev-api принимает поле под ключом 'login'
-        password: password,
+      // Отправляем  запрос на бэкенд Skypro для входа
+      const response = await api("user/login", {
+        method: "POST",
+        body: {
+          login: email, // wedev-api принимает поле под ключом 'login'
+          password: password,
+        },
       });
 
       // Извлекаем токен из структуры ответа wedev-api
-      const token = response.data.user?.token || response.data.token;
+      const token = response.user?.token || response.token;
 
       if (token) {
         // Сохраняем токен в localStorage под ключом 'token'
         localStorage.setItem("token", token);
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         // Перенаправляем на страницу расходов только ПОСЛЕ успешного получения токена
         navigate("/expenses");
@@ -43,11 +45,8 @@ const LoginPages = () => {
     } catch (err) {
       console.error("Ошибка при авторизации:", err);
       // Выводим текст ошибки, который прислал сервер (например, "Неверный логин или пароль")
-      const serverMessage =
-        err.response?.data?.error || err.response?.data?.message;
-      setError(
-        serverMessage || "Произошла ошибка при входе. Попробуйте позже.",
-      );
+
+      setError(err.message || "Произошла ошибка при входе. Попробуйте позже.");
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +93,7 @@ const LoginPages = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 $hasError={!!error}
+                disabled={isLoading}
               />
             </S.InputGroup>
 
@@ -111,7 +111,9 @@ const LoginPages = () => {
 
             {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
-            <S.SubmitBtn type="submit">Войти</S.SubmitBtn>
+            <S.SubmitBtn type="submit" disabled={isLoading}>
+              {isLoading ? "Вход..." : "Войти"}
+            </S.SubmitBtn>
           </S.Form>
 
           <S.Footer>

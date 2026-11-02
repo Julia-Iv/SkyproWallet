@@ -1,42 +1,43 @@
-import { useState } from 'react';
-import * as S from './ExpensesPages.styled';
+import { useState } from "react";
+import * as S from "./ExpensesPages.styled";
 
 const categories = [
-  { id: 'Еда', name: 'Еда', icon: '🍔' },
-  { id: 'Транспорт', name: 'Транспорт', icon: '🚗' },
-  { id: 'Жилье', name: 'Жилье', icon: '🏠' },
-  { id: 'Развлечения', name: 'Развлечения', icon: '🎬' },
-  { id: 'Образование', name: 'Образование', icon: '🎓' },
-  { id: 'Другое', name: 'Другое', icon: '⚫' },
+  { id: "food", name: "Еда", icon: "🍔" },
+  { id: "transport", name: "Транспорт", icon: "🚗" },
+  { id: "housing", name: "Жилье", icon: "🏠" },
+  { id: "joy", name: "Развлечения", icon: "🎬" },
+  { id: "education", name: "Образование", icon: "🎓" },
+  { id: "others", name: "Другое", icon: "⚫" },
 ];
 
 function AddExpenseForm({ onAddExpense }) {
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState('');
-  const [date, setDate] = useState('');
-  const [amount, setAmount] = useState('');
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [date, setDate] = useState("");
+  const [amount, setAmount] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!name || !category || !date || !amount) {
-      alert('Пожалуйста, заполните все поля и выберите категорию!');
+      alert("Пожалуйста, заполните все поля и выберите категорию!");
       return;
     }
-
+    const [year, month, day] = date.split("-");
+    const formattedDate = `${day}.${month}.${year}`;
     // Передаем собранные данные в родительский компонент
     onAddExpense({
       name,
       category,
-      date,
+      date: formattedDate,
       amount,
     });
 
     // Очищаем форму
-    setName('');
-    setCategory('');
-    setDate('');
-    setAmount('');
+    setName("");
+    setCategory("");
+    setDate("");
+    setAmount("");
   };
 
   return (
@@ -45,9 +46,9 @@ function AddExpenseForm({ onAddExpense }) {
       <S.Form onSubmit={handleSubmit}>
         <S.FormGroup>
           <S.Label>Описание</S.Label>
-          <S.Input 
-            type="text" 
-            placeholder="Введите описание" 
+          <S.Input
+            type="text"
+            placeholder="Введите описание"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -60,7 +61,11 @@ function AddExpenseForm({ onAddExpense }) {
               <S.CategoryButton
                 key={cat.id}
                 type="button"
-                style={category === cat.id ? { borderColor: '#6366f1', backgroundColor: '#eef2ff' } : {}}
+                style={
+                  category === cat.id
+                    ? { borderColor: "#6366f1", backgroundColor: "#eef2ff" }
+                    : {}
+                }
                 onClick={() => setCategory(cat.id)}
               >
                 {cat.icon} {cat.name}
@@ -71,9 +76,9 @@ function AddExpenseForm({ onAddExpense }) {
 
         <S.FormGroup>
           <S.Label>Дата</S.Label>
-          <S.Input 
-            type="text" 
-            placeholder="ДД.ММ.ГГГГ" 
+          <S.Input
+            type="date"
+            placeholder="ДД.ММ.ГГГГ"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
@@ -81,9 +86,9 @@ function AddExpenseForm({ onAddExpense }) {
 
         <S.FormGroup>
           <S.Label>Сумма</S.Label>
-          <S.Input 
-            type="number" 
-            placeholder="Введите сумму" 
+          <S.Input
+            type="number"
+            placeholder="Введите сумму"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
