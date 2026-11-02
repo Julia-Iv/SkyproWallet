@@ -14,6 +14,22 @@ const categoryTranslations = {
   education: "Образование",
   others: "Другое"
 };
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  try {
+    const date = new Date(dateString);
+    // Если дата некорректная (например, уже в формате ДД.ММ.ГГГГ), возвращаем как есть
+    if (isNaN(date.getTime())) return dateString; 
+    
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы в JS идут от 0 до 11
+    const year = date.getFullYear();
+    
+    return `${day}.${month}.${year}`;
+  } catch {
+    return dateString;
+  }
+};
 const ExpensesPages = () => {
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
@@ -38,6 +54,7 @@ const ExpensesPages = () => {
         id: item._id || item.id,
         name: item.description || item.name,
         amount: item.sum || item.amount,
+        date: formatDate(item.date),
         // Переводим категорию на русский для таблицы, если есть перевод
         category: categoryTranslations[item.category] || item.category 
       }));
