@@ -7,7 +7,7 @@ export const PageWrapper = styled.div`
   color: #1f2937;
 `;
 
- export const Header = styled.header`
+export const Header = styled.header`
   position: fixed;
   top: 0;
   left: 0;
@@ -17,12 +17,12 @@ export const PageWrapper = styled.div`
   border-bottom: 1px solid #eef0f2;
   z-index: 100;
   box-sizing: border-box;
-  
+
   /* Внутренний контейнер для центрирования элементов хедера */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 calc((100% - 1200px) / 2 + 24px); 
+  padding: 0 calc((100% - 1200px) / 2 + 24px);
 
   @media (max-width: 1248px) {
     padding: 0 24px;
@@ -38,7 +38,7 @@ export const Logo = styled.div`
 
   span {
     padding: 6px;
-    background-color: #6366f1;
+    background-color: #f1ebfd;
     border-radius: 6px;
     color: #ffffff;
     font-size: 10px;
@@ -55,12 +55,12 @@ export const NavLink = styled.a`
   font-weight: 500;
   text-decoration: none;
   padding-bottom: 4px;
-  color: ${(props) => (props.$active ? "#6366f1" : "#6b7280")};
-  border: 2px solid ${(props) => (props.$active ? "#6366f1" : "transparent")};
+  color: ${(props) => (props.$active ? "#7334EA" : "#F1EBFD")};
+  border: 2px solid ${(props) => (props.$active ? "#7334EA" : "transparent")};
   transition: color 0.2s;
 
   &:hover {
-    color: #6366f1;
+    color: #7334ea;
   }
 `;
 
@@ -74,7 +74,7 @@ export const LogoutButton = styled.button`
   transition: color 0.2s;
 
   &:hover {
-    color: #6366f1;
+    color: #7334ea;
   }
 `;
 
@@ -111,12 +111,18 @@ export const Card = styled.section`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   border: 1px solid #f3f4f6;
 `;
+export const TableCard = styled(Card)`
+  padding: 24px 0 0 0; /* Боковые отступы убираем, чтобы линия ушла в края */
+  overflow: hidden;
+`;
 
 export const CardTitle = styled.h2`
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 16px;
   color: #111827;
+  padding-left: 14px;
+  //padding-right: 24px;
 `;
 
 export const TableContainer = styled.div`
@@ -128,50 +134,60 @@ export const Table = styled.table`
   border-collapse: collapse;
   font-size: 12px;
   text-align: left;
+  thead tr {
+    border-bottom: 0.5px solid #999999;
+  }
 `;
 
 export const Th = styled.th`
   color: #9ca3af;
   font-weight: 500;
-  padding-bottom: 12px;
-  border: 1px solid #f3f4f6;
+  padding: 0 24px 14px 24px;
+  border: none;
 `;
 
 export const Td = styled.td`
-  padding: 14px 0;
-  border: 1px solid #f9fafb;
+  padding: 14px 24px;
+  border: none;
+  border-bottom: 0.5px solid #f9fafb;
   color: ${(props) => props.$color || "#111827"};
   font-weight: ${(props) => (props.$bold ? "600" : "400")};
+  vertical-align: middle;
 `;
-
 export const DeleteButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: #9ca3af;
-  transition: color 0.2s;
+  font-size: 16px;
+  padding: 4px;
+  opacity: 0.4;
+  transition: opacity 0.15s ease-in-out;
 
+  /* Эффект удаления: Есть возможность удаления расхода. При нажатии на корзину расход удалится */
   &:hover {
-    color: #ef4444;
+    opacity: 1;
+    transform: scale(1.1);
   }
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 `;
 
 export const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 4px;
+  gap: 12px;
 `;
 
 export const Label = styled.label`
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
 `;
 
 export const Input = styled.input`
@@ -185,38 +201,55 @@ export const Input = styled.input`
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: #6366f1;
+    border-color: #7334ea;
+    background-color: #f1ebfd;
   }
 `;
 
 export const CategoryGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 export const CategoryButton = styled.button`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 8px;
+  padding: 8px 14px;
   font-size: 12px;
+  font-weight: 400;
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
+  white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s;
+  color: #374151;
 
   &:hover {
     background-color: #f9fafb;
-    border-color: #6366f1;
+    border-color: #7334ea;
+    color: #7334ea;
   }
+  /* Состояние выбранной активной плашки */
+  ${(props) =>
+    props.$active &&
+    `
+    background-color: #f1ebfd !important;
+    border-color: #7334ea !important;
+    color: #7334ea !important;
+  `}
 `;
 
 export const SubmitButton = styled.button`
   width: 100%;
-  background-color: #6366f1;
-  color: #ffffff;
+  background-color: #7334ea;
+  color: #f9fafb;
   font-weight: 500;
   padding: 12px;
   border: none;
@@ -228,6 +261,6 @@ export const SubmitButton = styled.button`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #4f46e5;
+    background-color: #7334ea;
   }
 `;

@@ -54,26 +54,32 @@ export const Nav = styled.nav`
 
 export const MenuLink = styled.a`
   font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
+  font-weight: 400;
+  color: #000000;
   text-decoration: none;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   padding: 4px 0;
   border-bottom: 2px solid transparent;
   transition: all 0.2s ease;
 
   &:hover {
-    color: #7334EA;
+    color: #7334ea;
+    font-weight: 600;
+    border-bottom-color: #7334ea;
   }
 
   /* Класс active автоматически вешается компонентом NavLink из react-router-dom */
   &.active {
-    color: #7334EA;
-    border-bottom-color: #7334EA;
+    color: #7334ea;
+    font-weight: 600;
+    border-bottom-color: #7334ea;
   }
 `;
 
-// Правая часть: Блок пользователя / Действия
+// Правая часть: пользователь
 export const UserBlock = styled.div`
   display: flex;
   align-items: center;
@@ -92,12 +98,12 @@ export const UserName = styled.span`
 
 export const LogoutBtn = styled.button`
   background: none;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
- // color: #6e6e6e;
+  border: none;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  padding-right: 150px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family:
@@ -106,10 +112,6 @@ export const LogoutBtn = styled.button`
     sans-serif;
 
   &:hover {
-    background-color: #fafafa;
-    border-color: #7334EA;
-    color: #7334EA;
+    color: #7334ea;
   }
 `;
-
-

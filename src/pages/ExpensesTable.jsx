@@ -2,7 +2,7 @@ import * as S from './ExpensesPages.styled';
 
 function ExpensesTable({ expenses, onDeleteExpense }) {
   return (
-    <S.Card>
+    <S.TableCard>
       <S.CardTitle>Таблица расходов</S.CardTitle>
       <S.TableContainer>
         <S.Table>
@@ -18,9 +18,9 @@ function ExpensesTable({ expenses, onDeleteExpense }) {
           <tbody>
             {expenses.length === 0 ? (
               <tr>
-                <S.Td colSpan="5" style={{ textAlign: 'center', color: '#9ca3af', padding: '24px 0' }}>
+                <td colSpan="5" style={{ textAlign: 'center', color: '#9ca3af', padding: '24px 0' }}>
                   Список расходов пуст. Добавьте первый расход!
-                </S.Td>
+                </td>
               </tr>
             ) : (
               expenses.map((item) => (
@@ -43,7 +43,7 @@ function ExpensesTable({ expenses, onDeleteExpense }) {
           </tbody>
         </S.Table>
       </S.TableContainer>
-    </S.Card>
+    </S.TableCard>
   );
 }
 
