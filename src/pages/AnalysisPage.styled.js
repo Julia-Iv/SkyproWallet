@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 // Главный контейнер страницы
 export const Main = styled.main`
@@ -167,40 +167,104 @@ export const MonthTitle = styled.h3`
 export const DaysGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  justify-items: center;
+  gap: 4px 0;
+  justify-items: stretch;
+  align-items: center;
 `;
 
 export const DayButton = styled.button`
-  width: 32px;
-  height: 32px;
+  width: 100%;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 50%;
   font-size: 12px;
   font-weight: 500;
+  position: relative;
   cursor: pointer;
-
-  /* СТАТИЧНОЕ СОСТОЯНИЕ: Все числа изначально в серых кружочках */
-  background: ${(props) => (props.$active ? "#7F56D9" : "#F3F4F6")};
-  /* Для активного дня текст белый, для остальных — темно-серый */
-  color: ${(props) => (props.$active ? "#ffffff" : "#4b5563")};
-
+  z-index: 1;
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
 
+  /* СТАТИЧНОЕ СОСТОЯНИЕ: Все числа изначально в серых кружочках */
+  background-color: #f3f5f6;
+  color: #4b5563;
+  border-radius: 50%;
+
+  /* БАЗОВЫЙ ХОВЕР: Для обычных дней при наведении легкий круглый фон */
   &:hover {
-    background: ${(props) => (props.$active ? "#7F56D9" : "#f3f4f6")};
+    background: #f1ebfd;
+    color: #7f56d9;
+    border-radius: 50%;
   }
-  /* При наведении любой кружок плавно становится фиолетовым */
-  &:hover {
-    background: #7f56d9;
-    color: #ffffff;
-  }
+
+  /* СОСТОЯНИЕ: ДЕНЬ ВНУТРИ ДИАПАЗОНА (Несколько дней / недель) */
+  ${(props) =>
+    props.$inRange &&
+    css`
+      background: #f1ebfd !important;
+      color: #7f56d9;
+      border-radius: 50%;
+
+      &:hover {
+        background: #e9dffd !important;
+        color: #7f56d9 !important;
+        border-radius: 0px !important;
+      }
+    `}
+
+  /* СОСТОЯНИЕ: АКТИВНЫЕ ДНИ (Старт или Конец периода) */
+  ${(props) =>
+    props.$active &&
+    css`
+      background: #f1ebfd; /* Фоновая заливка подложки диапазона */
+      font-weight: 600;
+      color: #7f56d9;
+      border-radius: 50%;
+
+      /* Создаем фиолетовый кружок поверх заливки с помощью псевдоэлемента */
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 40px;
+        height: 40px;
+        background: #f1ebfd;
+        color: #7f56d9;
+        border-radius: 50%;
+        z-index: -1;
+      }
+
+      &:hover {
+        background: #f1ebfd;
+        color: #7f56d9;
+      }
+    `}
 `;
+/* СТАТИЧНОЕ СОСТОЯНИЕ: Все числа изначально в серых кружочках */
+// background: ${(props) => (props.$active ? "#7F56D9" : "#F3F4F6")};
+/* Для активного дня текст белый, для остальных — темно-серый */
+//color: ${(props) => (props.$active ? "#ffffff" : "#4b5563")};
+
+//transition:
+//background-color 0.2s ease,
+//color 0.2s ease;
+
+// &:hover {
+// background: ${(props) => (props.$active ? "#7F56D9" : "#f3f4f6")};
+//}
+/* При наведении любой кружок плавно становится фиолетовым */
+//&:hover {
+//background: #7f56d9;
+//color: #ffffff;
+//}
+//`;
+
 /* Стили для Графика */
 
 export const ChartAmount = styled.div`

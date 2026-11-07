@@ -1,10 +1,11 @@
 import { useState } from "react";
 import * as S from "../pages/AnalysisPage.styled";
 
-const PeriodCalendar = () => {
+const PeriodCalendar = ({onPeriodSelect}) => {
   const daysOfWeek = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
 
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   
   const monthNames = [
     "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
@@ -17,13 +18,13 @@ const PeriodCalendar = () => {
     const months = [];
     
     for (let month = 4; month < 12; month++) {
-      // 1. Узнаем, с какого дня недели начинается месяц (0 - вск, 1 - пн, ..., 6 - сб)
+      // Узнаем, с какого дня недели начинается месяц (0 - вск, 1 - пн, ..., 6 - сб)
       const firstDayInstance = new Date(year, month, 1);
       let startDayOfWeek = firstDayInstance.getDay(); 
       // Переводим на привычный нам лад (0 - пн, 1 - вт, ..., 6 - вск)
       startDayOfWeek = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
 
-      // 2. Узнаем количество дней в этом месяце
+      // Узнаем количество дней в этом месяце
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
       months.push({
@@ -42,19 +43,43 @@ const calendarData = generateYearData(2026); // Можно передать curr
   //  клик по дню
   const handleDayClick = (year, monthIndex, day) => {
     const clickedDate = new Date(year, monthIndex, day);
-    setSelectedDate(clickedDate);
-    
-    // Для проверки в консоли (потом можно передавать наверх в родительский компонент)
-    console.log("Выбранная дата:", clickedDate.toLocaleDateString("ru-RU"));
+   if (!startDate || (startDate && endDate)) {
+      // Первый клик или сброс старого диапазона: устанавливаем дату старта
+      setStartDate(clickedDate);
+      setEndDate(null);
+    } else if (startDate && !endDate) {
+      // Второй клик
+      if (clickedDate < startDate) {
+        // Если кликнули на дату раньше старта, делаем её новой датой старта
+        setStartDate(clickedDate);
+      } else {
+        // Иначе это дата окончания
+        setEndDate(clickedDate);
+        
+        // Передаем статичный период в родительский компонент для отправки в анализ
+        if (onPeriodSelect) {
+          onPeriodSelect({
+            start: startDate.toLocaleDateString("ru-RU"),
+            end: clickedDate.toLocaleDateString("ru-RU")
+          });
+        }
+        console.log("Фиксированный период выбран:", {
+          from: startDate.toLocaleDateString("ru-RU"),
+          to: clickedDate.toLocaleDateString("ru-RU")
+        });
+      }
+    }
   };
-// Функция проверки: активен (выбран) ли текущий день рендера
-  const isDateSelected = (year, monthIndex, day) => {
-    if (!selectedDate) return false;
-    return (
-      selectedDate.getFullYear() === year &&
-      selectedDate.getMonth() === monthIndex &&
-      selectedDate.getDate() === day
-    );
+
+  // Проверка статуса дня для стилизации
+  const getDayStatus = (year, monthIndex, day) => {
+    const currentDate = new Date(year, monthIndex, day);
+    
+    const isStart = startDate && currentDate.getTime() === startDate.getTime();
+    const isEnd = endDate && currentDate.getTime() === endDate.getTime();
+    const isInRange = startDate && endDate && currentDate > startDate && currentDate < endDate;
+
+    return { isStart, isEnd, isInRange };
   };
 
  
@@ -88,11 +113,12 @@ const calendarData = generateYearData(2026); // Можно передать curr
                 
                 {/* Рендерим реальные дни */}
                 {days.map((day) => {
-                  const active = isDateSelected(month.year, month.monthIndex, day);
+                  const { isStart, isEnd, isInRange } = getDayStatus(month.year, month.monthIndex, day);
                   return (
                     <S.DayButton 
                       key={`day-${month.year}-${month.monthIndex}-${day}`} 
-                      $active={active}
+                      $active={isStart || isEnd} // Границы диапазона (первый и последний день)
+                      $inRange={isInRange}       // Дни внутри диапазона
                       onClick={() => handleDayClick(month.year, month.monthIndex, day)}
                     >
                       {day}
