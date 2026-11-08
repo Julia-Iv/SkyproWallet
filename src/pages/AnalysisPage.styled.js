@@ -211,7 +211,7 @@ export const DayButton = styled.button`
       &:hover {
         background: #e9dffd !important;
         color: #7f56d9 !important;
-        border-radius: 0px !important;
+        border-radius: 50%;
       }
     `}
 
@@ -246,25 +246,6 @@ export const DayButton = styled.button`
       }
     `}
 `;
-/* СТАТИЧНОЕ СОСТОЯНИЕ: Все числа изначально в серых кружочках */
-// background: ${(props) => (props.$active ? "#7F56D9" : "#F3F4F6")};
-/* Для активного дня текст белый, для остальных — темно-серый */
-//color: ${(props) => (props.$active ? "#ffffff" : "#4b5563")};
-
-//transition:
-//background-color 0.2s ease,
-//color 0.2s ease;
-
-// &:hover {
-// background: ${(props) => (props.$active ? "#7F56D9" : "#f3f4f6")};
-//}
-/* При наведении любой кружок плавно становится фиолетовым */
-//&:hover {
-//background: #7f56d9;
-//color: #ffffff;
-//}
-//`;
-
 /* Стили для Графика */
 
 export const ChartAmount = styled.div`
@@ -304,4 +285,23 @@ export const BarValue = styled.span`
   font-size: 12px;
   font-weight: 600;
   color: #111827;
+`;
+export const ChartWrapper = styled.div`
+  width: 100%;
+  height: 300px;
+  margin-top: 24px;
+
+  /* Находим SVG-элемент Recharts и жестко зачищаем любые рамки и контуры */
+  svg {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Зачищаем внутреннюю обводку фонового прямоугольника Recharts */
+  .recharts-wrapper, 
+  .recharts-surface {
+    border: none !important;
+    outline: none !important;
+  }
 `;

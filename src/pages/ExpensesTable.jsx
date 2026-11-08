@@ -23,8 +23,8 @@ function ExpensesTable({ expenses, onDeleteExpense }) {
                 </td>
               </tr>
             ) : (
-              expenses.map((item) => (
-                <tr key={item.id}>
+              expenses.map((item, index) => (
+                <tr key={item.id || `expense-${index}`}>
                   <S.Td>{item.name}</S.Td>
                   <S.Td $color="#6b7280">{item.category}</S.Td>
                   <S.Td $color="#9ca3af">{item.date}</S.Td>
@@ -34,7 +34,7 @@ function ExpensesTable({ expenses, onDeleteExpense }) {
                       title="Удалить" 
                       onClick={() => onDeleteExpense(item.id)}
                     >
-                      🗑️
+                     <span>🗑️</span>
                     </S.DeleteButton>
                   </S.Td>
                 </tr>

@@ -12,19 +12,19 @@ const categoryTranslations = {
   housing: "Жилье",
   joy: "Развлечения",
   education: "Образование",
-  others: "Другое"
+  others: "Другое",
 };
 const formatDate = (dateString) => {
   if (!dateString) return "";
   try {
     const date = new Date(dateString);
     // Если дата некорректная (например, уже в формате ДД.ММ.ГГГГ), возвращаем как есть
-    if (isNaN(date.getTime())) return dateString; 
-    
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы в JS идут от 0 до 11
+    if (isNaN(date.getTime())) return dateString;
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Месяцы в JS идут от 0 до 11
     const year = date.getFullYear();
-    
+
     return `${day}.${month}.${year}`;
   } catch {
     return dateString;
@@ -38,26 +38,26 @@ const ExpensesPages = () => {
   //  Функция загрузки расходов с бэкенда
   useEffect(() => {
     const token = localStorage.getItem("token");
-  
-  // Если токена нет, не отправляем запрос, а сразу выкидываем на логин
-  if (!token) {
-    navigate("/login"); // Убедитесь, что navigate доступен в компоненте через useNavigate()
-    return;
-  }
+
+    // Если токена нет, не отправляем запрос, а сразу выкидываем на логин
+    if (!token) {
+      navigate("/login"); // Убедитесь, что navigate доступен в компоненте через useNavigate()
+      return;
+    }
     const fetchExpenses = async () => {
       setIsLoading(true);
       try {
         const response = await api("transactions");
         const transactionsData = response.transactions || response;
-        const formattedExpenses = transactionsData.map(item => ({
-        ...item,
-        id: item._id || item.id,
-        name: item.description || item.name,
-        amount: item.sum || item.amount,
-        date: formatDate(item.date),
-        // Переводим категорию на русский для таблицы, если есть перевод
-        category: categoryTranslations[item.category] || item.category 
-      }));
+        const formattedExpenses = transactionsData.map((item) => ({
+          ...item,
+          id: item._id || item.id,
+          name: item.description || item.name,
+          amount: item.sum || item.amount,
+          date: formatDate(item.date),
+          // Переводим категорию на русский для таблицы, если есть перевод
+          category: categoryTranslations[item.category] || item.category,
+        }));
         setExpenses(formattedExpenses);
       } catch (error) {
         console.error("Не удалось загрузить расходы:", error.message);
@@ -85,24 +85,28 @@ const ExpensesPages = () => {
       sum: cleanAmount,
     };
     try {
-      const response = await api("transactions",{
+      const response = await api("transactions", {
         method: "POST",
         body: newExpense,
       });
       // Если сервер возвращает созданный объект внутри поля transaction, берем его
       const addedExpense = response.transaction || response;
       const safeAddedExpense = {
-      ...addedExpense,
-      id: addedExpense._id || addedExpense.id,
-      name: addedExpense.description || addedExpense.name,
-      amount: addedExpense.sum || addedExpense.amount,
-      // Переводим для таблицы
-      category: categoryTranslations[addedExpense.category] || addedExpense.category
-    };
+        ...addedExpense,
+        id: addedExpense._id || addedExpense.id || String(Date.now()),
+        name: addedExpense.description || addedExpense.name || expenseData.name,
+        amount: addedExpense.sum || addedExpense.amount || cleanAmount,
+        date: formatDate(addedExpense.date || expenseData.date),
+        // Переводим для таблицы
+        category:
+          categoryTranslations[addedExpense.category] ||
+          categoryTranslations[expenseData.category] ||
+          expenseData.category,
+      };
 
-      setExpenses([safeAddedExpense, ...expenses]);
+      setExpenses((prevExpenses) => [safeAddedExpense, ...prevExpenses]);
     } catch (error) {
-       console.error("Не удалось добавить расход:", error.message);
+      console.error("Не удалось добавить расход:", error.message);
       alert(`Не удалось добавить расход: ${error.message}`);
     }
   };
