@@ -25,7 +25,7 @@ const PeriodCalendar = ({ onPeriodSelect }) => {
   // Функция для генерации данных месяцев, сгенерируем 12 месяцев 2026 года
   const generateYearData = (year = 2026) => {
     const months = [];
-    
+
     const targetMonths = Array.from({ length: 12 }, (_, i) => i);
 
     targetMonths.forEach((month) => {
@@ -60,7 +60,7 @@ const PeriodCalendar = ({ onPeriodSelect }) => {
       setEndDate(null);
       // Передаем промежуточное состояние (одиночный день) в родительский компонент
       if (onPeriodSelect) {
-        onPeriodSelect({ from: clickedDate, to: null });
+        onPeriodSelect({ from: clickedDate, to: clickedDate });
       }
     } else if (startDate && !endDate) {
       // Второй клик
@@ -144,7 +144,7 @@ const PeriodCalendar = ({ onPeriodSelect }) => {
                     <S.DayButton
                       key={`day-${month.year}-${month.monthIndex}-${day}`}
                       $active={isStart || isEnd} // Границы диапазона (первый и последний день)
-                      $inRange={isInRange} // Дни внутри диапазона
+                      $inRange={isInRange || isStart || isEnd}
                       onClick={() =>
                         handleDayClick(month.year, month.monthIndex, day)
                       }
